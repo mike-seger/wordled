@@ -9,6 +9,7 @@ class WordledGame {
 			document.body.append(this.container)
 			this.resetGame()
 			this.addEventListeners()
+            this.fitToViewport()
 		})
     }
 
@@ -21,6 +22,7 @@ class WordledGame {
         this.chosenWord = this.words[rand]
         this.container.innerHTML = ''
 		this.createUI()
+        requestAnimationFrame(() => this.fitToViewport())
 		if(window.solveWindow && window.solveWindow.closed)
 			window.solveWindow.postMessage('X', '*') 
     }
@@ -140,7 +142,23 @@ class WordledGame {
 			if(word === 'X') this.resetGame()
 			else this.enterWord(word)
 		})
+            window.addEventListener('resize', this.fitToViewport.bind(this))
+            window.addEventListener('orientationchange', this.fitToViewport.bind(this))
 	}
+
+        fitToViewport() {
+            if (!this.container) return
+
+            const baseWidth = this.container.offsetWidth
+            const baseHeight = this.container.offsetHeight
+            if (!baseWidth || !baseHeight) return
+
+            const scale = Math.min(window.innerWidth / baseWidth, window.innerHeight / baseHeight)
+            const offsetX = (window.innerWidth - (baseWidth * scale)) / 2
+            const offsetY = (window.innerHeight - (baseHeight * scale)) / 2
+
+            this.container.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`
+        }
 
     handleGlobalKeyPress(event) {
         if (this.finished) return

@@ -12,12 +12,12 @@ html, body{
 }
 
 #container{
-	width: 100%;
-	max-width: 600px;
-	margin: 0 auto;
-	height: 100%;
+	width: 600px;
+	margin: 0;
 	display: flex;
 	flex-direction: column;
+	transform-origin: top left;
+	will-change: transform;
 }
 
 .logo{
